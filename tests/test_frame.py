@@ -1,5 +1,5 @@
 import unittest
-from ..src.main import Frame, SkeletonModel
+from src.main import Frame, SkeletonModel
 
 class TestFrame(unittest.TestCase):
 

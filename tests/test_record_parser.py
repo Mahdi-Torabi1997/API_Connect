@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from ..src.main import RecordParser
+from src.main import RecordParser
 
 class TestRecordParser(unittest.TestCase):
 
