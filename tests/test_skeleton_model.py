@@ -1,5 +1,5 @@
 import unittest
-from main import SkeletonModel
+from ..src.main import SkeletonModel
 
 class TestSkeletonModel(unittest.TestCase):
 

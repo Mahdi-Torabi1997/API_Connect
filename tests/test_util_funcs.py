@@ -1,5 +1,5 @@
 import unittest
-from main import parseStringInt32, parseStringInt16, parseStringFloat
+from ..src.main import parseStringInt32, parseStringInt16, parseStringFloat
 
 class TestUtilFuncs(unittest.TestCase):
 
