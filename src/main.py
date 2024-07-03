@@ -3,8 +3,8 @@ import requests
 import pandas as pd
 
 # Constants for API authentication
-CLIENT_ID = "lCbN00xtQ5OC8tZo"
-CLIENT_SECRET = "AgV30faxOYr4ozl1p8m97uaamw0gQgZNadowlTjbCOqOG4Ew5TEz6G8JSu1EdFfM"
+CLIENT_ID = "NnPOAzszR8TKZVnT"
+CLIENT_SECRET = "lvvdFj8p58YRTjWQACMzDo4PIopuKfNgxkhXr1nehblkQpRDQSNRgoDzk2C2BBCx"
 
 ################# Utility Functions ###################
 def parseStringInt32(stringData, startIndex):
