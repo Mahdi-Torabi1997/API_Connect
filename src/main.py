@@ -162,13 +162,10 @@ class RecordParser(object):
         self.binary_datas.append(binary_data)
 
     def fetch_all(self):
-        """
-        Fetches all recordings in recordid_pairs and stores the binary data.
-        """
-        for record in self.recordid_pairs:
+        for record in list(self.recordid_pairs):  # Iterate over a copy of the list
             camera_id, record_id = record
             self.fetch_recording(record_id, camera_id)
-            self.recordid_pairs.remove(record)
+        self.recordid_pairs.clear()  # Clear the list after processing
 
     def parse_binary(self):
         """
