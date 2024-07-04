@@ -3,61 +3,67 @@ import requests
 import pandas as pd
 
 # Constants for API authentication
-CLIENT_ID = "NnPOAzszR8TKZVnT"
-CLIENT_SECRET = "lvvdFj8p58YRTjWQACMzDo4PIopuKfNgxkhXr1nehblkQpRDQSNRgoDzk2C2BBCx"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
+
 
 ################# Utility Functions ###################
 def parseStringInt32(stringData, startIndex):
     """
     Parses a 32-bit integer from a binary string starting at the given index.
-    
+
     Args:
         stringData (bytes): Binary string data.
         startIndex (int): Starting index to parse the integer.
-        
+
     Returns:
         int: Parsed 32-bit integer.
     """
     b = stringData[startIndex: startIndex + 4]
     return int.from_bytes(b, byteorder="little")
 
+
 def parseStringInt16(stringData, startIndex):
     """
     Parses a 16-bit integer from a binary string starting at the given index.
-    
+
     Args:
         stringData (bytes): Binary string data.
         startIndex (int): Starting index to parse the integer.
-        
+
     Returns:
         int: Parsed 16-bit integer.
     """
     b = stringData[startIndex: startIndex + 2]
     return int.from_bytes(b, byteorder="little")
 
+
 def parseStringFloat(stringData, startIndex):
     """
     Parses a float from a binary string starting at the given index.
-    
+
     Args:
         stringData (bytes): Binary string data.
         startIndex (int): Starting index to parse the float.
-        
+
     Returns:
         float: Parsed float.
     """
     b = stringData[startIndex: startIndex + 4]
     return struct.unpack("f", b)[0]
+
+
 ########################################################
 
 class SkeletonModel(object):
     """
     Class representing a skeleton model with tracker ID, person ID, and coordinates.
     """
+
     def __init__(self, tracker_id, person_id, XCoords, YCoords):
         """
         Initializes the SkeletonModel.
-        
+
         Args:
             tracker_id (int): Tracker ID.
             person_id (int): Person ID.
@@ -69,14 +75,16 @@ class SkeletonModel(object):
         self.XCoords = XCoords
         self.YCoords = YCoords
 
+
 class Frame(object):
     """
     Class representing a frame with camera ID, skeletons, and timestamp.
     """
+
     def __init__(self, camera_id, people, timestamp):
         """
         Initializes the Frame.
-        
+
         Args:
             camera_id (int): Camera ID.
             people (list): List of SkeletonModel objects.
@@ -86,14 +94,16 @@ class Frame(object):
         self.skeletons = people
         self.timestamp = timestamp
 
+
 class RecordParser(object):
     """
     Class to handle fetching and parsing of recordings.
     """
+
     def __init__(self, client_id=CLIENT_ID, client_secret=CLIENT_SECRET):
         """
         Initializes the RecordParser with API credentials and retrieves the access token.
-        
+
         Args:
             client_id (str): Client ID for API access.
             client_secret (str): Client secret for API access.
@@ -121,7 +131,7 @@ class RecordParser(object):
     def get_records(self, start_date, end_date, camera_id=None):
         """
         Retrieves record IDs for the given date range and optional camera ID, and stores them in recordid_pairs.
-        
+
         Args:
             start_date (int): Start date in epoch time.
             end_date (int): End date in epoch time.
@@ -148,7 +158,7 @@ class RecordParser(object):
     def fetch_recording(self, record_id, camera_id):
         """
         Fetches a single recording by record ID and camera ID and stores the binary data.
-        
+
         Args:
             record_id (str): Record ID.
             camera_id (str): Camera ID.
@@ -204,7 +214,7 @@ class RecordParser(object):
     def to_csv(self, filename):
         """
         Converts all parsed data in records to a CSV file.
-        
+
         Args:
             filename (str): Name of the output CSV file.
         """
@@ -225,6 +235,7 @@ class RecordParser(object):
                     df = df.append(new_df_row, ignore_index=True)
         df.to_csv(filename, index=False)
         self.records = []
+
 
 if __name__ == '__main__':
     # Instantiate and use the RecordParser
