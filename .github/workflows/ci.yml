@@ -1,10 +1,6 @@
 name: Python application
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -22,7 +18,5 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run tests
-      env:
-        PYTHONPATH: ./src
       run: |
         pytest

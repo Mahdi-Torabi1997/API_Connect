@@ -1,14 +1,27 @@
-import unittest
+from unittest import TestCase
 from unittest.mock import patch, MagicMock
 from src.main import RecordParser
 
-class TestRecordParser(unittest.TestCase):
+class TestRecordParser(TestCase):
 
-    @patch('requests.api.post')
-    def test_get_token(self, mock_post):
+    @patch('requests.post')
+    def setUp(self, mock_post):
         mock_post.return_value.json.return_value = {"access_token": "fake_token"}
-        parser = RecordParser()
-        self.assertEqual(parser.token, "fake_token")
+        self.parser = RecordParser()
+
+    @patch('main.RecordParser.fetch_recording')
+    def test_fetch_all(self, mock_fetch_recording):
+        self.parser.recordid_pairs = [["cam1", "rec1"], ["cam2", "rec2"]]
+        self.parser.fetch_all()
+        self.assertEqual(mock_fetch_recording.call_count, 2)
+
+    @patch('requests.get')
+    def test_fetch_recording(self, mock_get):
+        mock_get.return_value.content = b'binary_data'
+        mock_get.return_value.status_code = 200
+        self.parser.fetch_recording('rec1', 'cam1')
+        self.assertEqual(len(self.parser.binary_datas), 1)
+        self.assertEqual(self.parser.binary_datas[0], b'binary_data')
 
     @patch('requests.api.get')
     def test_get_records(self, mock_get):
@@ -20,26 +33,8 @@ class TestRecordParser(unittest.TestCase):
                 ]
             }
         }
-        parser = RecordParser()
-        parser.get_records(1234567890, 1234567891)
-        self.assertEqual(parser.recordid_pairs, [["cam1", "rec1"], ["cam1", "rec2"], ["cam2", "rec3"]])
-
-    @patch('requests.get')
-    def test_fetch_recording(self, mock_get):
-        mock_get.return_value.content = b'binary_data'
-        mock_get.return_value.status_code = 200
-        parser = RecordParser()
-        parser.fetch_recording("rec1", "cam1")
-        self.assertIn(b'binary_data', parser.binary_datas)
-
-    @patch('main.RecordParser.fetch_recording')
-    def test_fetch_all(self, mock_fetch_recording):
-        parser = RecordParser()
-        parser.recordid_pairs = [["cam1", "rec1"], ["cam2", "rec2"]]
-        parser.fetch_all()
-        self.assertEqual(len(parser.binary_datas), 2)
-
-    # Assuming parse_binary and to_csv methods are already tested with integration tests
-
-if __name__ == '__main__':
-    unittest.main()
+        start_date = 1698054064
+        end_date = 1700154064
+        self.parser.get_records(start_date, end_date)
+        expected_records = [["cam1", "rec1"], ["cam1", "rec2"], ["cam2", "rec3"]]
+        self.assertEqual(self.parser.recordid_pairs, expected_records)

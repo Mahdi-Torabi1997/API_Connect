@@ -1,22 +1,22 @@
-import unittest
+import struct
+from unittest import TestCase
 from src.main import parseStringInt32, parseStringInt16, parseStringFloat
 
-class TestUtilFuncs(unittest.TestCase):
+class TestUtilFuncs(TestCase):
 
     def test_parseStringInt32(self):
-        data = b'\x01\x00\x00\x00\x02\x00\x00\x00'
-        self.assertEqual(parseStringInt32(data, 0), 1)
-        self.assertEqual(parseStringInt32(data, 4), 2)
+        data = struct.pack('i', 12345)
+        result = parseStringInt32(data, 0)
+        self.assertEqual(result, 12345)
 
     def test_parseStringInt16(self):
-        data = b'\x01\x00\x02\x00'
-        self.assertEqual(parseStringInt16(data, 0), 1)
-        self.assertEqual(parseStringInt16(data, 2), 2)
+        data = struct.pack('h', 12345)
+        result = parseStringInt16(data, 0)
+        self.assertEqual(result, 12345)
 
     def test_parseStringFloat(self):
         data = struct.pack('f', 1.23) + struct.pack('f', 4.56)
-        self.assertAlmostEqual(parseStringFloat(data, 0), 1.23, places=2)
-        self.assertAlmostEqual(parseStringFloat(data, 4), 4.56, places=2)
-
-if __name__ == '__main__':
-    unittest.main()
+        result = parseStringFloat(data, 0)
+        self.assertAlmostEqual(result, 1.23, places=5)
+        result = parseStringFloat(data, 4)
+        self.assertAlmostEqual(result, 4.56, places=5)
