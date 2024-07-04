@@ -1,15 +1,15 @@
-from unittest import TestCase
+import unittest
 from unittest.mock import patch, MagicMock
 from src.main import RecordParser
 
-class TestRecordParser(TestCase):
+class TestRecordParser(unittest.TestCase):
 
     @patch('requests.post')
     def setUp(self, mock_post):
         mock_post.return_value.json.return_value = {"access_token": "fake_token"}
         self.parser = RecordParser()
 
-    @patch('main.RecordParser.fetch_recording')
+    @patch('src.main.RecordParser.fetch_recording')
     def test_fetch_all(self, mock_fetch_recording):
         self.parser.recordid_pairs = [["cam1", "rec1"], ["cam2", "rec2"]]
         self.parser.fetch_all()
@@ -38,3 +38,6 @@ class TestRecordParser(TestCase):
         self.parser.get_records(start_date, end_date)
         expected_records = [["cam1", "rec1"], ["cam1", "rec2"], ["cam2", "rec3"]]
         self.assertEqual(self.parser.recordid_pairs, expected_records)
+
+if __name__ == "__main__":
+    unittest.main()
